@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expense Tracker</title>
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand"><span class="logo">₹</span><span>Expense Tracker</span></div>
+    <div class="controls">
+      <select id="userSelect" aria-label="Select user"></select>
+      <button id="addUserBtn" class="btn ghost" type="button">+ New user</button>
+      <button id="themeBtn" class="icon-btn" type="button" aria-label="Toggle light or dark mode" title="Toggle theme"></button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="welcome" class="card welcome hidden">
+      <h1>Welcome</h1>
+      <p>Add a user to start tracking money in and money out.</p>
+      <button id="welcomeAdd" class="btn primary" type="button">Add your first user</button>
+    </section>
+
+    <div id="dashboard" class="hidden">
+
+      <section class="stats">
+        <article class="card stat">
+          <span class="label">Money in</span>
+          <strong id="totalIn" class="in">₹0.00</strong>
+        </article>
+        <article class="card stat">
+          <span class="label">Money out</span>
+          <strong id="totalOut" class="out">₹0.00</strong>
+        </article>
+        <article class="card stat">
+          <span class="label">Balance</span>
+          <strong id="balance">₹0.00</strong>
+        </article>
+      </section>
+
+      <section class="grid">
+        <form id="txForm" class="card" autocomplete="off">
+          <h2>New transaction</h2>
+          <div class="segmented" role="group" aria-label="Transaction type">
+            <button type="button" class="seg active" data-type="in">Money in</button>
+            <button type="button" class="seg" data-type="out">Money out</button>
+          </div>
+          <label>Amount (₹)
+            <input id="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required>
+          </label>
+          <label>Category
+            <select id="category"></select>
+          </label>
+          <label>Date
+            <input id="date" type="date" required>
+          </label>
+          <label>Note <span class="optional">(optional)</span>
+            <input id="note" type="text" maxlength="80">
+          </label>
+          <button id="submitTx" class="btn primary block">Add money in</button>
+        </form>
+
+        <div class="card">
+          <h2>Spending by category</h2>
+          <div id="breakdown"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="table-head">
+          <h2>Transactions</h2>
+          <div class="tabs" id="filterTabs">
+            <button class="tab active" data-filter="all" type="button">All</button>
+            <button class="tab" data-filter="in" type="button">In</button>
+            <button class="tab" data-filter="out" type="button">Out</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th><th>Type</th><th>Category</th><th>Note</th>
+                <th class="amt">Amount</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="txBody"></tbody>
+          </table>
+        </div>
+        <p id="empty" class="empty hidden">No transactions to show.</p>
+      </section>
+
+    </div>
+  </main>
+
+  <dialog id="userDialog">
+    <form id="userForm" class="dialog-form" autocomplete="off">
+      <h2>Add user</h2>
+      <label>Name
+        <input id="userName" type="text" maxlength="40" required>
+      </label>
+      <p id="userError" class="form-error"></p>
+      <div class="dialog-actions">
+        <button type="button" id="cancelUser" class="btn ghost">Cancel</button>
+        <button class="btn primary">Add user</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
